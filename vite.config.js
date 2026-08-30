@@ -7,16 +7,16 @@ export default defineConfig({
     port: 3000,
     open: true,
   },
-  resolve: {
-    alias: {
-      'maplibre-gl': 'maplibre-gl/dist/maplibre-gl.js'
-    }
-  },
   build: {
     outDir: 'dist',
     sourcemap: true,
-  },
-  optimizeDeps: {
-    exclude: ['maplibre-gl']
+    rollupOptions: {
+      external: ['maplibre-gl'],
+      output: {
+        globals: {
+          'maplibre-gl': 'maplibregl'
+        }
+      }
+    }
   }
 });

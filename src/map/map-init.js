@@ -2,7 +2,6 @@
  * MapLibre GL JS initialization with dark maritime basemap
  */
 import * as maplibregl from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
 
 let map = null;
 

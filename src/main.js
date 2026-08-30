@@ -9,7 +9,6 @@ import './styles/components.css';
 import './styles/map.css';
 import './styles/animations.css';
 import './styles/ml-panel.css';
-import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { initMap, getMap } from './map/map-init.js';
 import { runInvestigation, resetInvestigation } from './engine/investigation-workflow.js';
