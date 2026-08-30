@@ -1,4 +1,4 @@
-import * as maplibregl from 'maplibre-gl';
+const maplibregl = window.maplibregl;
 import * as turf from '@turf/turf';
 import { case001 } from '../../data/case001.ts';
 import { formatCoord } from '../../utils/geo-utils.js';

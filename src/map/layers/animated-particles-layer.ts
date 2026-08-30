@@ -1,4 +1,4 @@
-import { Map as MapLibreMap } from 'maplibre-gl';
+type MapLibreMap = any;
 import { case001, Coordinate } from '../../data/case001.ts';
 
 let animationFrameId: number | null = null;

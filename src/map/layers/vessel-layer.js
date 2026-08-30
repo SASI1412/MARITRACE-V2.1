@@ -1,4 +1,4 @@
-import * as maplibregl from 'maplibre-gl';
+const maplibregl = window.maplibregl;
 import { case001 } from '../../data/case001.ts';
 
 let onVesselClickCallback = null;
