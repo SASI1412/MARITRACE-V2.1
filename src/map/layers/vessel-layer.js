@@ -82,7 +82,6 @@ export function addVesselLayer(map) {
     source: 'vessels-source',
     layout: {
       'text-field': ['get', 'name'],
-      'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'], // valid fallback stack
       'text-offset': [0, 1.5],
       'text-size': 11
     },

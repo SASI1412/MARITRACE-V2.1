@@ -30,9 +30,10 @@ export function addBackwardDriftLayer(map) {
     type: 'line',
     source: 'backward-drift-source',
     paint: {
-      'line-color': '#40c4ff',
-      'line-width': 1.5,
-      'line-opacity': 0.4
+      'line-color': '#ffffff', // changed to white for contrast
+      'line-width': 2,
+      'line-dasharray': [2, 2],
+      'line-opacity': 0.9
     }
   });
 
@@ -48,7 +49,7 @@ export function addBackwardDriftLayer(map) {
       'text-keep-upright': false
     },
     paint: {
-      'text-color': '#40c4ff',
+      'text-color': '#ffffff',
       'text-halo-color': 'rgba(0,0,0,0.8)',
       'text-halo-width': 1
     }
