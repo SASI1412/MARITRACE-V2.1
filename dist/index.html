@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpillTrace — Maritime Oil Spill Detection & Vessel Attribution</title>
+  <meta name="description" content="Advanced maritime investigation dashboard for oil spill detection via Sentinel-1 SAR imagery, backward drift reconstruction, AIS vessel correlation, and attribution scoring." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛢️</text></svg>" />
+  <script type="module" crossorigin src="/assets/index-BkEs6QAP.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BXzP8LUc.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header id="app-header">
+      <div class="header-left">
+        <div class="logo" id="logo">
+          <svg class="logo-icon" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="url(#logoGrad)" stroke-width="2.5" fill="none"/>
+            <path d="M10 20 Q16 8 22 20" stroke="url(#logoGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M8 22 Q16 14 24 22" stroke="url(#logoGrad)" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+            <circle cx="16" cy="12" r="2.5" fill="url(#logoGrad)"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32">
+                <stop offset="0%" stop-color="#00e5ff"/>
+                <stop offset="100%" stop-color="#7c4dff"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="logo-text">
+            <h1>SpillTrace</h1>
+            <span class="logo-subtitle">Maritime Investigation Platform</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-center">
+        <div class="status-bar" id="status-bar">
+          <div class="status-indicator status-ready" id="status-indicator">
+            <span class="status-dot"></span>
+            <span class="status-text" id="status-text">System Ready</span>
+          </div>
+          <div class="pipeline-progress" id="pipeline-progress">
+            <div class="pipeline-steps" id="pipeline-steps"></div>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-meta">
+          <span class="meta-item" id="current-time"></span>
+          <span class="meta-item meta-case" id="case-id">Case: —</span>
+        </div>
+        <button class="btn btn-primary btn-glow" id="btn-investigate">
+          <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a7 7 0 015.464 11.535l3.536 3.536a1 1 0 01-1.414 1.414l-3.536-3.536A7 7 0 119 2zm0 2a5 5 0 100 10A5 5 0 009 4z"/></svg>
+          Investigate Spill
+        </button>
+        <button class="btn btn-ghost" id="btn-replay" title="Replay Investigation" style="display:none;">
+          <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+          Replay
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-main">
+      <!-- Map Container -->
+      <section class="map-section" id="map-section">
+        <div id="map" class="map-container"></div>
+        <!-- Layer Controls -->
+        <div class="map-controls" id="map-controls">
+          <div class="layer-panel" id="layer-panel">
+            <h3 class="layer-panel-title">Layers</h3>
+            <div class="layer-toggles" id="layer-toggles"></div>
+          </div>
+        </div>
+        <!-- Map Legend -->
+        <div class="map-legend" id="map-legend" style="display:none;"></div>
+      </section>
+
+      <!-- Investigation Panel -->
+      <aside class="panel-section" id="panel-section">
+        <div class="panel-tabs" id="panel-tabs">
+          <button class="panel-tab active" data-tab="investigation" id="tab-investigation">Investigation</button>
+          <button class="panel-tab" data-tab="vessels" id="tab-vessels">Vessels</button>
+          <button class="panel-tab" data-tab="summary" id="tab-summary">Summary</button>
+        </div>
+        <div class="panel-content" id="panel-content">
+          <!-- Investigation Tab -->
+          <div class="tab-pane active" id="pane-investigation">
+            <div class="welcome-state" id="welcome-state">
+              <div class="welcome-icon">
+                <svg viewBox="0 0 80 80" fill="none">
+                  <circle cx="40" cy="40" r="36" stroke="url(#welcomeGrad)" stroke-width="2" opacity="0.3"/>
+                  <circle cx="40" cy="40" r="24" stroke="url(#welcomeGrad)" stroke-width="1.5" opacity="0.5"/>
+                  <circle cx="40" cy="40" r="12" fill="url(#welcomeGrad)" opacity="0.2"/>
+                  <circle cx="40" cy="40" r="4" fill="url(#welcomeGrad)"/>
+                  <path d="M40 10 L40 16 M40 64 L40 70 M10 40 L16 40 M64 40 L70 40" stroke="url(#welcomeGrad)" stroke-width="1.5" stroke-linecap="round"/>
+                  <defs>
+                    <linearGradient id="welcomeGrad" x1="0" y1="0" x2="80" y2="80">
+                      <stop offset="0%" stop-color="#00e5ff"/>
+                      <stop offset="100%" stop-color="#7c4dff"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <h2>Maritime Spill Investigation</h2>
+              <p>Click <strong>"Investigate Spill"</strong> to begin the automated investigation workflow for case <span class="text-accent" id="welcome-case-id">SPILL-2024-ARB-0047</span>.</p>
+              <p class="text-muted">The system will analyze SAR satellite imagery, reconstruct drift patterns, correlate AIS vessel data, and generate attribution scores.</p>
+              <div class="welcome-steps">
+                <div class="welcome-step"><span class="step-num">1</span> SAR Detection</div>
+                <div class="welcome-step"><span class="step-num">2</span> Drift Analysis</div>
+                <div class="welcome-step"><span class="step-num">3</span> Origin Zone</div>
+                <div class="welcome-step"><span class="step-num">4</span> AIS Correlation</div>
+                <div class="welcome-step"><span class="step-num">5</span> Ranking</div>
+                <div class="welcome-step"><span class="step-num">6</span> Scoring</div>
+                <div class="welcome-step"><span class="step-num">7</span> Verification</div>
+                <div class="welcome-step"><span class="step-num">8</span> Summary</div>
+              </div>
+            </div>
+            <div class="investigation-content" id="investigation-content" style="display:none;"></div>
+          </div>
+          <!-- Vessels Tab -->
+          <div class="tab-pane" id="pane-vessels" style="display:none;"></div>
+          <!-- Summary Tab -->
+          <div class="tab-pane" id="pane-summary" style="display:none;"></div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer id="app-footer">
+      <span>SpillTrace v1.0 — Demo Investigation Platform</span>
+      <span class="footer-disclaimer">⚠ Simulated data for demonstration only. Not for operational or legal use.</span>
+    </footer>
+  </div>
+
+</body>
+</html>
