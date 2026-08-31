@@ -25,6 +25,29 @@ let isRunning = false;
 let onStepChange = null;
 let onVesselSelectFromMap = null;
 
+let nextStageResolver = null;
+let nextBtnListenerAdded = false;
+
+function waitForNextStage() {
+  if (!nextBtnListenerAdded) {
+    document.addEventListener('keydown', (e) => {
+      // Common presentation clicker / keyboard keys
+      if (['Enter', ' ', 'ArrowRight', 'PageDown'].includes(e.key)) {
+        if (nextStageResolver) {
+          const resolve = nextStageResolver;
+          nextStageResolver = null;
+          resolve();
+        }
+      }
+    });
+    nextBtnListenerAdded = true;
+  }
+  
+  return new Promise(resolve => {
+    nextStageResolver = resolve;
+  });
+}
+
 export function setStepChangeCallback(cb) {
   onStepChange = cb;
 }
