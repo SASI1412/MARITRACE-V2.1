@@ -194,7 +194,7 @@ export async function runInvestigation(selectVesselOnMap) {
   await delay(1500);
   
   addSpillLayer(map);
-  await delay(2500);
+  await waitForNextStage();
   updatePipelineStep(1, 'complete');
 
   // ---- STEP 2: Backward Drift Reconstruction ----
@@ -212,12 +212,12 @@ export async function runInvestigation(selectVesselOnMap) {
   createBackwardDriftLayer();
   createWindCurrentLayer();
   addWindCurrentLayer(map);
-  await delay(800);
+  await waitForNextStage();
   addBackwardDriftLayer(map);
 
   // Zoom out to see drift
   flyTo(19.38, 71.16, 10.5, 2);
-  await delay(3000);
+  await waitForNextStage();
   updatePipelineStep(1, 'complete');
 
   // ---- STEP 3: Origin Probability Zone ----
@@ -231,7 +231,7 @@ export async function runInvestigation(selectVesselOnMap) {
   createHeatmapLayer(map);
   addHeatmapLayer(map);
   flyTo(case001.origin.center.lat, case001.origin.center.lng, 11, 2);
-  await delay(2500);
+  await waitForNextStage();
   updatePipelineStep(3, 'complete');
 
   // ---- STEP 4: AIS Vessel Correlation ----
@@ -307,7 +307,8 @@ export async function runInvestigation(selectVesselOnMap) {
     });
   }
 
-  await delay(3000);
+  await delay(1000);
+  await waitForNextStage();
   updatePipelineStep(6, 'complete');
 
   // ---- STEP 7: Forward Drift Verification ----
@@ -341,10 +342,8 @@ export async function runInvestigation(selectVesselOnMap) {
 
   await delay(1500); // Give user a moment to see the panel before auto-playing
   playAnimation();
-
-  // Wait for animation to finish (6s) + some padding
-  await delay(7000);
-  
+  await delay(2000);
+  await waitForNextStage();
   updatePipelineStep(7, 'complete');
 
   // ---- STEP 8: Final Evidence Summary ----
