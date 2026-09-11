@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@turf/turf": "^7.1.0",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "maplibre-gl": "^6.6.0",
     "puppeteer": "^25.9.0"
   },

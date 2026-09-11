@@ -9,6 +9,7 @@ import './styles/components.css';
 import './styles/map.css';
 import './styles/animations.css';
 import './styles/ml-panel.css';
+import './styles/live-ship.css';
 
 import { initMap, getMap } from './map/map-init.js';
 import { runInvestigation, resetInvestigation } from './engine/investigation-workflow.js';
@@ -17,6 +18,9 @@ import { animateScoreRings } from './utils/animation-utils.js';
 import { getCurrentTimeDisplay } from './utils/format-utils.js';
 import { showTrajectory } from './map/layers/vessel-layer.js';
 import { case001 } from './data/case001.ts';
+import { liveAISController } from './map/live-ais-controller.js';
+import { LiveShipDrawer } from './panels/live-ship-drawer.js';
+import { liveAISService } from './services/live-ais-service.js';
 
 // Initialize application
 function init() {
@@ -25,6 +29,9 @@ function init() {
 
   // Init globe
   initGlobe();
+
+  // Init Live AIS Tracking
+  initLiveShipTracking();
 
   // Update clock
   updateClock();
@@ -170,6 +177,31 @@ function initGlobe() {
       myGlobe.width(container.clientWidth).height(container.clientHeight);
     });
   }
+}
+
+function initLiveShipTracking() {
+  const drawerContainer = document.getElementById('live-ship-drawer-container');
+  const hudContainer = document.getElementById('live-vessel-hud-container');
+  const toggleBtn = document.getElementById('btn-live-ship-toggle');
+
+  if (hudContainer) {
+    liveAISController.setHudContainer(hudContainer);
+  }
+
+  let drawer = null;
+  if (drawerContainer) {
+    drawer = new LiveShipDrawer(drawerContainer, liveAISController);
+  }
+
+  if (toggleBtn && drawer) {
+    toggleBtn.addEventListener('click', () => {
+      drawer.toggle();
+    });
+  }
+
+  // Load initial snapshot and initiate live updates
+  liveAISService.fetchInitialSnapshot();
+  liveAISService.connectWebSocket();
 }
 
 // Boot

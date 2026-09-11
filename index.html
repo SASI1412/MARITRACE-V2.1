@@ -49,12 +49,26 @@
           <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a7 7 0 015.464 11.535l3.536 3.536a1 1 0 01-1.414 1.414l-3.536-3.536A7 7 0 119 2zm0 2a5 5 0 100 10A5 5 0 009 4z"/></svg>
           Investigate Spill
         </button>
+        <button class="btn btn-ghost" id="btn-header-export-pdf" title="Export Forensic PDF Report" style="display:none; color:#58a6ff; border:1px solid rgba(47,129,247,0.3);">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          Export PDF
+        </button>
         <button class="btn btn-ghost" id="btn-replay" title="Replay Investigation" style="display:none;">
           <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
           Replay
         </button>
       </div>
     </header>
+
+    <!-- Persistent Live Ship Tracking Toggle Button -->
+    <button class="live-ship-toggle-btn" id="btn-live-ship-toggle" title="Open Live Ship Tracking">
+      <span class="live-beacon-dot"></span>
+      <span class="live-ship-toggle-label">LIVE SHIP TRACKING</span>
+    </button>
+
+    <!-- Live Ship Tracking Drawer & HUD Containers -->
+    <div id="live-ship-drawer-container"></div>
+    <div id="live-vessel-hud-container"></div>
 
     <!-- Main Content -->
     <main id="app-main">

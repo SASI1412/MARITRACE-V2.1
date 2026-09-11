@@ -74,8 +74,14 @@ export function renderSummaryPanel() {
         Disclaimer: MARITRACE provides an evidence-based compatibility ranking, not a legal determination of responsibility.
       </div>
       
-      <div style="display:flex; justify-content:center;">
-        <button class="btn btn-primary" id="btn-replay-summary" style="width: 100%; padding: 12px; justify-content: center;">
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="btn btn-primary btn-glow" id="btn-export-pdf" style="width: 100%; padding: 12px; justify-content: center; background: linear-gradient(135deg, #2f81f7 0%, #1f6feb 100%); font-weight: 700; letter-spacing: 0.05em;">
+          <svg style="width: 16px; height: 16px; margin-right: 8px;" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+          </svg>
+          EXPORT PDF REPORT
+        </button>
+        <button class="btn btn-secondary" id="btn-replay-summary" style="width: 100%; padding: 10px; justify-content: center; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #c9d1d9;">
           REPLAY INVESTIGATION
         </button>
       </div>

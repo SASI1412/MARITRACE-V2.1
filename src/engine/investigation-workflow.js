@@ -398,9 +398,41 @@ export async function runInvestigation(selectVesselOnMap) {
     });
   }
 
-  // Show replay button in header
+  // Wire Export PDF button in summary pane
+  const exportPdfBtn = summaryPane.querySelector('#btn-export-pdf');
+  if (exportPdfBtn) {
+    exportPdfBtn.addEventListener('click', async () => {
+      exportPdfBtn.disabled = true;
+      const originalText = exportPdfBtn.innerHTML;
+      exportPdfBtn.innerHTML = `
+        <span class="ml-spinner" style="width:12px;height:12px;border-width:2px;display:inline-block;margin-right:8px;"></span>
+        GENERATING PDF DOSSIER...
+      `;
+      try {
+        const { generateInvestigationPDF } = await import('../utils/pdf-export.js');
+        await generateInvestigationPDF();
+      } catch (err) {
+        console.error('PDF export error:', err);
+      } finally {
+        setTimeout(() => {
+          exportPdfBtn.disabled = false;
+          exportPdfBtn.innerHTML = originalText;
+        }, 1000);
+      }
+    });
+  }
+
+  // Show replay and export PDF buttons in header
   if (btnReplay) {
     btnReplay.style.display = 'inline-flex';
+  }
+  const btnHeaderPdf = document.getElementById('btn-header-export-pdf');
+  if (btnHeaderPdf) {
+    btnHeaderPdf.style.display = 'inline-flex';
+    btnHeaderPdf.onclick = async () => {
+      const { generateInvestigationPDF } = await import('../utils/pdf-export.js');
+      await generateInvestigationPDF();
+    };
   }
 
   isRunning = false;
@@ -478,8 +510,10 @@ export async function resetInvestigation() {
 
   const btnInvestigate = document.getElementById('btn-investigate');
   const btnReplay = document.getElementById('btn-replay');
+  const btnHeaderPdf = document.getElementById('btn-header-export-pdf');
   if (btnInvestigate) btnInvestigate.style.display = 'inline-flex';
   if (btnReplay) btnReplay.style.display = 'none';
+  if (btnHeaderPdf) btnHeaderPdf.style.display = 'none';
 
   // Bring back globe
   const globe = document.getElementById('globe-viz');

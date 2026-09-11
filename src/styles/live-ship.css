@@ -1,0 +1,631 @@
+/* ============================================
+   MariTrace - Live Ship Tracking Styles
+   ============================================ */
+
+/* Box sizing reset for live ship components */
+.live-ship-drawer,
+.live-ship-drawer *,
+.live-vessel-hud-card,
+.live-vessel-hud-card * {
+  box-sizing: border-box;
+}
+
+/* Persistent Left Vertical Button */
+.live-ship-toggle-btn {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(13, 17, 23, 0.94);
+  border: 1px solid rgba(47, 129, 247, 0.4);
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 10px;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.6), 0 0 12px rgba(47, 129, 247, 0.25);
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.live-ship-toggle-btn:hover {
+  background: rgba(22, 27, 34, 0.98);
+  border-color: #2f81f7;
+  box-shadow: 4px 0 20px rgba(47, 129, 247, 0.45);
+  transform: translateY(-50%) translateX(2px);
+}
+
+.live-ship-toggle-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c9d1d9;
+}
+
+.live-beacon-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #238636;
+  box-shadow: 0 0 8px #238636;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.live-beacon-dot::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid #238636;
+  opacity: 0.8;
+  animation: beacon-pulse 2s infinite ease-out;
+}
+
+@keyframes beacon-pulse {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Slide-out Left Drawer */
+.live-ship-drawer {
+  position: fixed;
+  top: 54px; /* Header height */
+  left: 0;
+  width: 380px;
+  max-width: calc(100vw - 20px);
+  height: calc(100vh - 54px - 28px); /* Account for header and footer */
+  background: rgba(13, 17, 23, 0.96);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
+  z-index: 950;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.live-ship-drawer.open {
+  transform: translateX(0);
+}
+
+/* Drawer Header */
+.live-drawer-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(22, 27, 34, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.live-drawer-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.live-drawer-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.live-drawer-title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.live-drawer-subtitle {
+  font-size: 10px;
+  font-weight: 600;
+  color: #8b949e;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-mono, monospace);
+}
+
+.live-drawer-close-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #c9d1d9;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.live-drawer-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Status and Refresh Row */
+.live-drawer-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.live-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.live-status-pill.status-live {
+  background: rgba(35, 134, 54, 0.15);
+  border-color: rgba(35, 134, 54, 0.4);
+  color: #3fb950;
+}
+
+.live-status-pill.status-partial {
+  background: rgba(210, 153, 34, 0.15);
+  border-color: rgba(210, 153, 34, 0.4);
+  color: #d29922;
+}
+
+.live-status-pill.status-connecting {
+  background: rgba(47, 129, 247, 0.15);
+  border-color: rgba(47, 129, 247, 0.4);
+  color: #58a6ff;
+}
+
+.live-status-pill.status-unavailable,
+.live-status-pill.status-error {
+  background: rgba(218, 54, 51, 0.15);
+  border-color: rgba(218, 54, 51, 0.4);
+  color: #f85149;
+}
+
+.btn-refresh-ais {
+  background: rgba(47, 129, 247, 0.12);
+  border: 1px solid rgba(47, 129, 247, 0.3);
+  color: #58a6ff;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-refresh-ais:hover:not(:disabled) {
+  background: rgba(47, 129, 247, 0.25);
+  border-color: #58a6ff;
+  color: #fff;
+}
+
+.btn-refresh-ais:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Search Box */
+.live-search-section {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(13, 17, 23, 0.6);
+  flex-shrink: 0;
+}
+
+.live-search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.live-search-input {
+  width: 100%;
+  background: rgba(22, 27, 34, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 7px 10px 7px 30px;
+  color: #fff;
+  font-size: 11px;
+  font-family: var(--font-mono, monospace);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.live-search-input:focus {
+  border-color: #2f81f7;
+  box-shadow: 0 0 8px rgba(47, 129, 247, 0.3);
+}
+
+.live-search-icon {
+  position: absolute;
+  left: 9px;
+  width: 13px;
+  height: 13px;
+  fill: #8b949e;
+  pointer-events: none;
+}
+
+/* Location Radius Filter Toggle */
+.live-radius-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #8b949e;
+  cursor: pointer;
+  padding: 2px 0;
+  user-select: none;
+}
+
+.live-radius-toggle:hover {
+  color: #c9d1d9;
+}
+
+.live-radius-panel {
+  display: none;
+  padding: 8px 10px;
+  background: rgba(22, 27, 34, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  margin-top: 2px;
+  font-size: 11px;
+}
+
+.live-radius-panel.open {
+  display: block;
+}
+
+.live-radius-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.live-radius-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.live-radius-field label {
+  font-size: 9px;
+  color: #6e7681;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.live-radius-field input {
+  width: 100%;
+  background: rgba(13, 17, 23, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 4px 6px;
+  color: #fff;
+  font-size: 10px;
+  font-family: var(--font-mono, monospace);
+  outline: none;
+}
+
+.live-radius-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.btn-radius-action {
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #c9d1d9;
+}
+
+.btn-radius-action:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+/* Vessel List */
+.live-vessel-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.live-vessel-list::-webkit-scrollbar {
+  width: 5px;
+}
+.live-vessel-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+/* Vessel Card Item */
+.live-vessel-item {
+  background: rgba(22, 27, 34, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.live-vessel-item:hover {
+  background: rgba(28, 33, 40, 0.95);
+  border-color: rgba(47, 129, 247, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.live-vessel-item.selected {
+  background: rgba(47, 129, 247, 0.14);
+  border-color: #2f81f7;
+  box-shadow: 0 0 14px rgba(47, 129, 247, 0.3);
+}
+
+.live-vessel-item.selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #2f81f7;
+  border-radius: 4px 0 0 4px;
+}
+
+.live-vessel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.live-vessel-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.live-vessel-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(47, 129, 247, 0.15);
+  color: #58a6ff;
+  border: 1px solid rgba(47, 129, 247, 0.3);
+  font-family: var(--font-mono, monospace);
+  flex-shrink: 0;
+}
+
+.live-vessel-mmsi {
+  font-size: 11px;
+  font-family: var(--font-mono, monospace);
+  color: #8b949e;
+}
+
+.live-vessel-coords {
+  font-size: 11px;
+  font-family: var(--font-mono, monospace);
+  color: #c9d1d9;
+}
+
+.live-vessel-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  font-family: var(--font-mono, monospace);
+  color: #8b949e;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 4px;
+  margin-top: 2px;
+}
+
+.live-vessel-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.live-vessel-meta-val {
+  color: #c9d1d9;
+  font-weight: 600;
+}
+
+/* Floating Selected Vessel Info Card Overlay (HUD) */
+.live-vessel-hud-card {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13, 17, 23, 0.95);
+  border: 1px solid rgba(47, 129, 247, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 20px rgba(47, 129, 247, 0.25);
+  backdrop-filter: blur(16px);
+  padding: 14px 18px;
+  z-index: 850;
+  width: 350px;
+  max-width: 90vw;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: hud-appear 0.25s ease-out;
+}
+
+@keyframes hud-appear {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.live-vessel-hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 6px;
+}
+
+.live-vessel-hud-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #fff;
+}
+
+.live-vessel-hud-close {
+  background: transparent;
+  border: none;
+  color: #8b949e;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.live-vessel-hud-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.live-vessel-hud-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  font-size: 11px;
+  font-family: var(--font-mono, monospace);
+}
+
+.hud-field-label {
+  color: #6e7681;
+  text-transform: uppercase;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.hud-field-val {
+  color: #fff;
+  font-weight: 600;
+  margin-top: 1px;
+}
+
+.live-vessel-hud-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #8b949e;
+  font-family: var(--font-mono, monospace);
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* MapLibre Vessel Marker Element */
+.live-ship-map-marker {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.live-ship-marker-icon {
+  width: 26px;
+  height: 26px;
+  filter: drop-shadow(0 0 6px #2f81f7);
+  transition: transform 0.3s ease;
+}
+
+.live-ship-marker-pulse {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid #2f81f7;
+  animation: marker-pulse 2s infinite ease-out;
+  pointer-events: none;
+}
+
+@keyframes marker-pulse {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* Empty or Error State in Drawer */
+.live-drawer-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: #8b949e;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.live-drawer-empty svg {
+  width: 36px;
+  height: 36px;
+  fill: #6e7681;
+}
